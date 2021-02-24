@@ -4,7 +4,13 @@ import json
 import pandas as pd
 import numpy as np
 
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+from langdetect import detect_langs
+
 import re
+import string
 
 from collections import Counter
 
@@ -60,11 +66,26 @@ def create_dataframe(query,api_key,max_number_shown=100):
             
         items = json.loads(request.data.decode('utf-8'))
 
-        rows += [[item['abstract'],item['keyword']] for item in items['records']]
+        rows += [[item['title'],item['abstract'],item['keyword']] for item in items['records']]
         
-    df = pd.DataFrame(rows,columns=['abstract','keywords'])
+    df = pd.DataFrame(rows,columns=['title','abstract','keywords'])
     
     return df
+
+# check if some entries are missing a value in column
+def missing_entries(dataframe,column):
+    # total number of items
+    total_items,_ = dataframe.shape
+    
+    # check if entry is missing
+    entry_length = dataframe[column].apply(len).to_numpy()
+    is_entry_missing = entry_length == 0
+    
+    missing_entries = np.sum(is_entry_missing)
+    
+    print('There are {} missing {} out of {}'.format(missing_entries,column,total_items))
+    
+    return is_entry_missing
 
 # clean the tags by lowering all characters, selecting alphanum words, stemming them, remove stopwords
 def clean_tags(tag_list,stemmer,stopwords):
@@ -122,4 +143,35 @@ def build_tag_tree(tree,parent_id,used_tags=[],depth=1,max_depth=5,min_size=100)
         return
         
     for tag,node_id in zip(visited_tags,node_ids):
-        build_tag_tree(tree,node_id,used_tags+[tag],depth+1,max_depth,min_size)     
+        build_tag_tree(tree,node_id,used_tags+[tag],depth+1,max_depth,min_size)
+        
+# check if an item in dataframe is written in english with probability above a certain treshold
+def is_foreign(item,treshold=0.7):
+    
+    languages = detect_langs(item)
+    
+    for lang in languages:
+        if lang.lang == 'en' and lang.prob > treshold:
+            return False
+    
+    return True
+
+# clean the text and use lemmatizer
+def clean_text_lemmatize(item,lemmatizer):
+    
+    # remove latex equations
+    item = re.sub('\$+.*?\$+','',item)
+    
+    # tokenize item and remove punctuation
+    item = [word for word in word_tokenize(item) if word not in string.punctuation]
+    
+    # lowecase everything and check if it is alphanumeic
+    item = [word.lower() for word in item if word.isalnum()]
+    
+    # remove english stopwords
+    item = [word for word in item if word not in stopwords.words('english')]
+    
+    # lemmatize the words
+    item = [lemmatizer.lemmatize(word) for word in item]
+    
+    return item
