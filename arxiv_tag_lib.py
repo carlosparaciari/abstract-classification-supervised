@@ -165,8 +165,8 @@ def clean_text_lemmatize(item,lemmatizer):
     # tokenize item and remove punctuation
     item = [word for word in word_tokenize(item) if word not in string.punctuation]
     
-    # lowecase everything and check if it is alphanumeic
-    item = [word.lower() for word in item if word.isalnum()]
+    # lowecase everything and check if it is alphanumeic (or contains an aphon)
+    item = [word.lower() for word in item if word.isalnum() or ('-' in word)]
     
     # remove english stopwords
     item = [word for word in item if word not in stopwords.words('english')]
