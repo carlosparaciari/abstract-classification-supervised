@@ -4,6 +4,8 @@ import json
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
@@ -175,3 +177,27 @@ def clean_text_lemmatize(item,lemmatizer):
     item = [lemmatizer.lemmatize(word) for word in item]
     
     return item
+
+# get the frequency of each label in the database
+def get_frequency_df(df,labels):
+    
+    N,_ = df.shape
+    bars = []
+    
+    for tag in labels:
+        N_tag,_ = df[df['keywords']==tag].shape
+        bars.append(N_tag/N)
+        
+    return bars
+
+# create bar plot with feature importance (works for RF and Boosting)
+def plot_feature_importance(importance,number_features=20):
+    
+    importance_values = [importance[i][0] for i in range(number_features)]
+    features_name = [importance[i][1] for i in range(number_features)]
+
+    positions = np.arange(number_features)
+    plt.barh(positions, importance_values)
+    plt.yticks(positions,features_name)
+    
+    plt.xlabel('feature importance')

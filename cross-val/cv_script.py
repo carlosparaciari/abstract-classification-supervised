@@ -17,8 +17,9 @@ model = GradientBoostingClassifier(random_state=2764)
 model_params = {}
 
 model_params['learning_rate'] = [1e-2,5e-2,1e-1,5e-1]
-model_params['n_estimators'] = [600,800,1200,1600]
 model_params['max_depth'] = [2,3,4,5,6]
+
+model_params['n_estimators'] = [10,100,200,400,600,800,1000,1200,1400,1600]
 
 # Setting cross-validation up
 cross_validation = GridSearchCV(model,
