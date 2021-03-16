@@ -36,7 +36,7 @@ There are several aspects that might be worth exploring. Conserning the use of k
 
 For what concern the vectorization used in this notebook, and the classifiers,
 
-- One could use different kind of embeddings than the tf-idf vectorization we used in this project. In a related project building on the dataset we produced here (see the [link]()), we train a word2vec model on the abstracts we collect here, and we use this embedding with different Neural Network architectures to classify the abstracts. The test accuracy obtained exceeds 80%.
+- One could use different kind of embeddings than the tf-idf vectorization we used in this project. In a related project building on the dataset we produced here (see the [link](https://github.com/carlosparaciari/abstract-classification-embedding)), we train a word2vec model on the abstracts we collect here, and we use this embedding with different Neural Network architectures to classify the abstracts. The test accuracy obtained exceeds 80%.
 
 ### Sections of the notebook
 
