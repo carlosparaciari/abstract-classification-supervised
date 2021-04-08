@@ -32,7 +32,7 @@ There are several aspects that might be worth exploring. Conserning the use of k
 
 - One might prefer to keep the problem as *multi-label classification*, that is possibly more natural for the present setting.
 - Instead of using the tree structure as we did, one could use the *apriori algorithm* to select relevant subset of keywords, and give a single name for each group of keywords. The problem with the apriori algorithm is that it will return overlapping sets.
-- One might not use the keywords as label, and instead simply *cluster* the abstracts (thus moving to an unsupervised setting).
+- One might not use the keywords as label, and instead simply *cluster* the abstracts (thus moving to an unsupervised setting). Clustering papers according to their abstract is also helpful to better understand what kind of (labelled) papers we should use to train a classifier that will then be deployied for classifying a specific set of papers. We perform a study in this direction over the papers in the *hep-th* category of the arXiv (see this [link](https://github.com/carlosparaciari/abstract-clustering) for  the result of this study).
 
 For what concern the vectorization used in this notebook, and the classifiers,
 
